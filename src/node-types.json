@@ -1006,6 +1006,11 @@
     }
   },
   {
+    "type": "EscapeSequence",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "FLOAT",
     "named": true,
     "fields": {}
@@ -1402,6 +1407,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "FormatSequence",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "GroupedExpr",
@@ -3310,15 +3320,11 @@
     "named": true
   },
   {
-    "type": "EscapeSequence",
-    "named": true
-  },
-  {
-    "type": "FormatSequence",
-    "named": true
-  },
-  {
     "type": "[",
+    "named": false
+  },
+  {
+    "type": "\\",
     "named": false
   },
   {
@@ -3347,6 +3353,10 @@
   },
   {
     "type": "and",
+    "named": false
+  },
+  {
+    "type": "any",
     "named": false
   },
   {
@@ -3566,6 +3576,10 @@
     "named": false
   },
   {
+    "type": "{{",
+    "named": false
+  },
+  {
     "type": "|",
     "named": false
   },
@@ -3579,6 +3593,10 @@
   },
   {
     "type": "}",
+    "named": false
+  },
+  {
+    "type": "}}",
     "named": false
   },
   {
