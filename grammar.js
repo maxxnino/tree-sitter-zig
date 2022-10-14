@@ -799,33 +799,29 @@ module.exports = grammar({
       ),
 
     EscapeSequence: (_) =>
-      token.immediate(
-        choice(
-          seq(
-            "\\",
-            choice(/x[0-9a-fA-f]{2}/, /u\{[0-9a-fA-F]+\}/, /[nr\\t'"]/)
-          ),
-          "{{",
-          "}}"
-        )
+      choice(
+        seq(
+          "\\",
+          choice(/x[0-9a-fA-f]{2}/, /u\{[0-9a-fA-F]+\}/, /[nr\\t'"]/)
+        ),
+        "{{",
+        "}}"
       ),
 
     FormatSequence: (_) =>
-      token.immediate(
-        seq(
-          "{",
-          /[0-9]*/,
-          optional(choice(/[xXsedbocu*]{1}/, "any")),
-          optional(
-            seq(
-              ":",
-              optional(seq(/[^"\\\{\}]{1}/, /[<^>]{1}/, /[0-9]+/)),
-              /.{0,1}/,
-              /[0-9]*/
-            )
-          ),
-          "}"
-        )
+      seq(
+        "{",
+        /[0-9]*/,
+        optional(choice(/[xXsedbocu*]{1}/, "any")),
+        optional(
+          seq(
+            ":",
+            optional(seq(/[^"\\\{\}]{1}/, /[<^>]{1}/, /[0-9]+/)),
+            /.{0,1}/,
+            /[0-9]*/
+          )
+        ),
+        "}"
       ),
 
     STRINGLITERALSINGLE: ($) =>
