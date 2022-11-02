@@ -2574,7 +2574,7 @@
           "named": true
         },
         {
-          "type": "PtrPayload",
+          "type": "PtrIndexPayload",
           "named": true
         },
         {
