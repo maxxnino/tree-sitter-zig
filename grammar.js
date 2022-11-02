@@ -591,7 +591,7 @@ module.exports = grammar({
 
     // Switch specific
     SwitchProng: ($) =>
-      seq($.SwitchCase, EQUALRARROW, optional($.PtrPayload), $.AssignExpr),
+      seq($.SwitchCase, EQUALRARROW, optional($.PtrIndexPayload), $.AssignExpr),
 
     SwitchCase: ($) => choice(sepBy1(COMMA, $.SwitchItem), keyword("else", $)),
 
