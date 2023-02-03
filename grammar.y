@@ -5,24 +5,26 @@ ContainerMembers <- ContainerDeclarations (ContainerField COMMA)* (ContainerFiel
 
 ContainerDeclarations
     <- TestDecl ContainerDeclarations
-     / TopLevelComptime ContainerDeclarations
-     / doc_comment? KEYWORD_pub? TopLevelDecl ContainerDeclarations
+     / ComptimeDecl ContainerDeclarations
+     / doc_comment? KEYWORD_pub? Decl ContainerDeclarations
      /
 
-TestDecl <- doc_comment? KEYWORD_test STRINGLITERALSINGLE? Block
+TestDecl <- KEYWORD_test (STRINGLITERALSINGLE / IDENTIFIER)? Block
 
-TopLevelComptime <- doc_comment? KEYWORD_comptime BlockExpr
+ComptimeDecl <- KEYWORD_comptime Block
 
-TopLevelDecl
+Decl
     <- (KEYWORD_export / KEYWORD_extern STRINGLITERALSINGLE? / (KEYWORD_inline / KEYWORD_noinline))? FnProto (SEMICOLON / Block)
      / (KEYWORD_export / KEYWORD_extern STRINGLITERALSINGLE?)? KEYWORD_threadlocal? VarDecl
      / KEYWORD_usingnamespace Expr SEMICOLON
 
-FnProto <- KEYWORD_fn IDENTIFIER? LPAREN ParamDeclList RPAREN ByteAlign? LinkSection? CallConv? EXCLAMATIONMARK? TypeExpr
+FnProto <- KEYWORD_fn IDENTIFIER? LPAREN ParamDeclList RPAREN ByteAlign? AddrSpace? LinkSection? CallConv? EXCLAMATIONMARK? TypeExpr
 
-VarDecl <- (KEYWORD_const / KEYWORD_var) IDENTIFIER (COLON TypeExpr)? ByteAlign? LinkSection? (EQUAL Expr)? SEMICOLON
+VarDecl <- (KEYWORD_const / KEYWORD_var) IDENTIFIER (COLON TypeExpr)? ByteAlign? AddrSpace? LinkSection? (EQUAL Expr)? SEMICOLON
 
-ContainerField <- doc_comment? KEYWORD_comptime? IDENTIFIER (COLON (KEYWORD_anytype / TypeExpr) ByteAlign?)? (EQUAL Expr)?
+ContainerField
+    <- doc_comment? KEYWORD_comptime? IDENTIFIER (COLON TypeExpr)? ByteAlign? (EQUAL Expr)?
+     / doc_comment? KEYWORD_comptime? (IDENTIFIER COLON)? !KEYWORD_fn TypeExpr ByteAlign? (EQUAL Expr)?
 
 # *** Block Level ***
 Statement
@@ -183,6 +185,8 @@ WhileContinueExpr <- COLON LPAREN AssignExpr RPAREN
 
 LinkSection <- KEYWORD_linksection LPAREN Expr RPAREN
 
+AddrSpace <- KEYWORD_addrspace LPAREN Expr RPAREN
+
 # Fn specific
 CallConv <- KEYWORD_callconv LPAREN Expr RPAREN
 
@@ -210,7 +214,7 @@ PtrIndexPayload <- PIPE ASTERISK? IDENTIFIER (COMMA IDENTIFIER)? PIPE
 
 
 # Switch specific
-SwitchProng <- SwitchCase EQUALRARROW PtrPayload? AssignExpr
+SwitchProng <- KEYWORD_inline? SwitchCase EQUALRARROW PtrIndexPayload? AssignExpr
 
 SwitchCase
     <- SwitchItem (COMMA SwitchItem)* COMMA?
@@ -221,10 +225,13 @@ SwitchItem <- Expr (DOT3 Expr)?
 # Operators
 AssignOp
     <- ASTERISKEQUAL
+     / ASTERISKPIPEEQUAL
      / SLASHEQUAL
      / PERCENTEQUAL
      / PLUSEQUAL
+     / PLUSPIPEEQUAL
      / MINUSEQUAL
+     / MINUSPIPEEQUAL
      / LARROW2EQUAL
      / LARROW2PIPEEQUAL
      / RARROW2EQUAL
@@ -254,6 +261,7 @@ BitwiseOp
 BitShiftOp
     <- LARROW2
      / RARROW2
+     / LARROW2PIPE
 
 AdditionOp
     <- PLUS
@@ -285,8 +293,8 @@ PrefixOp
 PrefixTypeOp
     <- QUESTIONMARK
      / KEYWORD_anyframe MINUSRARROW
-     / SliceTypeStart (ByteAlign / KEYWORD_const / KEYWORD_volatile / KEYWORD_allowzero)*
-     / PtrTypeStart (KEYWORD_align LPAREN Expr (COLON INTEGER COLON INTEGER)? RPAREN / KEYWORD_const / KEYWORD_volatile / KEYWORD_allowzero)*
+     / SliceTypeStart (ByteAlign / AddrSpace / KEYWORD_const / KEYWORD_volatile / KEYWORD_allowzero)*
+     / PtrTypeStart (AddrSpace / KEYWORD_align LPAREN Expr (COLON Expr COLON Expr)? RPAREN / KEYWORD_const / KEYWORD_volatile / KEYWORD_allowzero)*
      / ArrayTypeStart
 
 SuffixOp
@@ -311,7 +319,7 @@ ArrayTypeStart <- LBRACKET Expr (COLON Expr)? RBRACKET
 ContainerDeclAuto <- ContainerDeclType LBRACE container_doc_comment? ContainerMembers RBRACE
 
 ContainerDeclType
-    <- KEYWORD_struct
+    <- KEYWORD_struct (LPAREN Expr RPAREN)?
      / KEYWORD_opaque
      / KEYWORD_enum (LPAREN Expr RPAREN)?
      / KEYWORD_union (LPAREN (KEYWORD_enum (LPAREN Expr RPAREN)? / Expr) RPAREN)?
@@ -396,13 +404,11 @@ char_char
     <- mb_utf8_literal
      / char_escape
      / ascii_char_not_nl_slash_squote
-
 string_char
     <- char_escape
      / [^\\"\n]
-
-container_doc_comment <- ('//!' [^\n]* [ \n]*)+
-doc_comment <- ('///' [^\n]* [ \n]*)+
+container_doc_comment <- ('//!' [^\n]* [ \n]* skip)+
+doc_comment <- ('///' [^\n]* [ \n]* skip)+
 line_comment <- '//' ![!/][^\n]* / '////' [^\n]*
 line_string <- ("\\\\" [^\n]* [ \n]*)+
 skip <- ([ \n] / line_comment)*
@@ -411,8 +417,8 @@ CHAR_LITERAL <- "'" char_char "'" skip
 FLOAT
     <- "0x" hex_int "." hex_int ([pP] [-+]? dec_int)? skip
      /      dec_int "." dec_int ([eE] [-+]? dec_int)? skip
-     / "0x" hex_int "."? [pP] [-+]? dec_int skip
-     /      dec_int "."? [eE] [-+]? dec_int skip
+     / "0x" hex_int [pP] [-+]? dec_int skip
+     /      dec_int [eE] [-+]? dec_int skip
 INTEGER
     <- "0b" bin_int skip
      / "0o" oct_int skip
@@ -430,7 +436,7 @@ BUILTINIDENTIFIER <- "@"[A-Za-z_][A-Za-z0-9_]* skip
 
 AMPERSAND            <- '&'      ![=]      skip
 AMPERSANDEQUAL       <- '&='               skip
-ASTERISK             <- '*'      ![*%=]    skip
+ASTERISK             <- '*'      ![*%=|]   skip
 ASTERISK2            <- '**'               skip
 ASTERISKEQUAL        <- '*='               skip
 ASTERISKPERCENT      <- '*%'     ![=]      skip
@@ -452,15 +458,15 @@ EQUALRARROW          <- '=>'               skip
 EXCLAMATIONMARK      <- '!'      ![=]      skip
 EXCLAMATIONMARKEQUAL <- '!='               skip
 LARROW               <- '<'      ![<=]     skip
-LARROW2              <- '<<'     ![=]      skip
-LARROW2PIPE          <- '<<|'    ![=]      skip
-LARROW2PIPEEQUAL     <- '<<|='   ![=]      skip
+LARROW2              <- '<<'     ![=|]     skip
 LARROW2EQUAL         <- '<<='              skip
+LARROW2PIPE          <- '<<|'    ![=]      skip
+LARROW2PIPEEQUAL     <- '<<|='             skip
 LARROWEQUAL          <- '<='               skip
 LBRACE               <- '{'                skip
 LBRACKET             <- '['                skip
 LPAREN               <- '('                skip
-MINUS                <- '-'      ![%=>]    skip
+MINUS                <- '-'      ![%=>|]   skip
 MINUSEQUAL           <- '-='               skip
 MINUSPERCENT         <- '-%'     ![=]      skip
 MINUSPERCENTEQUAL    <- '-%='              skip
@@ -472,7 +478,7 @@ PERCENTEQUAL         <- '%='               skip
 PIPE                 <- '|'      ![|=]     skip
 PIPE2                <- '||'               skip
 PIPEEQUAL            <- '|='               skip
-PLUS                 <- '+'      ![%+=]    skip
+PLUS                 <- '+'      ![%+=|]   skip
 PLUS2                <- '++'               skip
 PLUSEQUAL            <- '+='               skip
 PLUSPERCENT          <- '+%'     ![=]      skip
@@ -494,6 +500,7 @@ SLASHEQUAL           <- '/='               skip
 TILDE                <- '~'                skip
 
 end_of_word <- ![a-zA-Z0-9_] skip
+KEYWORD_addrspace   <- 'addrspace'   end_of_word
 KEYWORD_align       <- 'align'       end_of_word
 KEYWORD_allowzero   <- 'allowzero'   end_of_word
 KEYWORD_and         <- 'and'         end_of_word
@@ -543,11 +550,11 @@ KEYWORD_var         <- 'var'         end_of_word
 KEYWORD_volatile    <- 'volatile'    end_of_word
 KEYWORD_while       <- 'while'       end_of_word
 
-keyword <- KEYWORD_align / KEYWORD_allowzero / KEYWORD_and / KEYWORD_anyframe
-         / KEYWORD_anytype / KEYWORD_asm / KEYWORD_async / KEYWORD_await
-         / KEYWORD_break / KEYWORD_callconv / KEYWORD_catch / KEYWORD_comptime
-         / KEYWORD_const / KEYWORD_continue / KEYWORD_defer / KEYWORD_else
-         / KEYWORD_enum / KEYWORD_errdefer / KEYWORD_error / KEYWORD_export
+keyword <- KEYWORD_addrspace / KEYWORD_align / KEYWORD_allowzero / KEYWORD_and
+         / KEYWORD_anyframe / KEYWORD_anytype / KEYWORD_asm / KEYWORD_async
+         / KEYWORD_await / KEYWORD_break / KEYWORD_callconv / KEYWORD_catch
+         / KEYWORD_comptime / KEYWORD_const / KEYWORD_continue / KEYWORD_defer
+         / KEYWORD_else / KEYWORD_enum / KEYWORD_errdefer / KEYWORD_error / KEYWORD_export
          / KEYWORD_extern / KEYWORD_fn / KEYWORD_for / KEYWORD_if
          / KEYWORD_inline / KEYWORD_noalias / KEYWORD_nosuspend / KEYWORD_noinline
          / KEYWORD_opaque / KEYWORD_or / KEYWORD_orelse / KEYWORD_packed
