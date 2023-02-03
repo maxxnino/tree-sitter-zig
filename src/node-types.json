@@ -5,6 +5,61 @@
     "fields": {}
   },
   {
+    "type": "AddrSpace",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "AsmExpr",
+          "named": true
+        },
+        {
+          "type": "BinaryExpr",
+          "named": true
+        },
+        {
+          "type": "Block",
+          "named": true
+        },
+        {
+          "type": "BlockLabel",
+          "named": true
+        },
+        {
+          "type": "BreakLabel",
+          "named": true
+        },
+        {
+          "type": "ErrorUnionExpr",
+          "named": true
+        },
+        {
+          "type": "IfExpr",
+          "named": true
+        },
+        {
+          "type": "InitList",
+          "named": true
+        },
+        {
+          "type": "LoopExpr",
+          "named": true
+        },
+        {
+          "type": "PrefixTypeOp",
+          "named": true
+        },
+        {
+          "type": "UnaryExpr",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "ArrayTypeStart",
     "named": true,
     "fields": {},
@@ -1202,6 +1257,10 @@
       "required": true,
       "types": [
         {
+          "type": "AddrSpace",
+          "named": true
+        },
+        {
           "type": "ByteAlign",
           "named": true
         },
@@ -1989,6 +2048,10 @@
       "required": false,
       "types": [
         {
+          "type": "AddrSpace",
+          "named": true
+        },
+        {
           "type": "ArrayTypeStart",
           "named": true
         },
@@ -2018,10 +2081,6 @@
         },
         {
           "type": "ErrorUnionExpr",
-          "named": true
-        },
-        {
-          "type": "INTEGER",
           "named": true
         },
         {
@@ -2803,6 +2862,10 @@
       "required": false,
       "types": [
         {
+          "type": "AddrSpace",
+          "named": true
+        },
+        {
           "type": "AsmExpr",
           "named": true
         },
@@ -3341,6 +3404,10 @@
   },
   {
     "type": "^=",
+    "named": false
+  },
+  {
+    "type": "addrspace",
     "named": false
   },
   {

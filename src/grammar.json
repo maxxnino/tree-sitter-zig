@@ -172,157 +172,166 @@
       ]
     },
     "TopLevelDecl": {
-      "type": "PREC_LEFT",
-      "value": 0,
-      "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "export"
-          },
-          {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "extern"
-              },
-              {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "STRINGLITERALSINGLE"
-                  },
-                  {
-                    "type": "BLANK"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "CHOICE",
-                    "members": [
-                      {
-                        "type": "STRING",
-                        "value": "inline"
-                      },
-                      {
-                        "type": "STRING",
-                        "value": "noinline"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "BLANK"
-                  }
-                ]
-              },
-              {
-                "type": "SYMBOL",
-                "name": "FnProto"
-              },
-              {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "STRING",
-                    "value": ";"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "Block"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "CHOICE",
-                    "members": [
-                      {
-                        "type": "STRING",
-                        "value": "export"
-                      },
-                      {
-                        "type": "SEQ",
-                        "members": [
-                          {
-                            "type": "STRING",
-                            "value": "extern"
-                          },
-                          {
-                            "type": "CHOICE",
-                            "members": [
-                              {
-                                "type": "SYMBOL",
-                                "name": "STRINGLITERALSINGLE"
-                              },
-                              {
-                                "type": "BLANK"
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "BLANK"
-                  }
-                ]
-              },
-              {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "STRING",
-                    "value": "threadlocal"
-                  },
-                  {
-                    "type": "BLANK"
-                  }
-                ]
-              },
-              {
-                "type": "SYMBOL",
-                "name": "VarDecl"
-              }
-            ]
-          },
-          {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "usingnamespace"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "_Expr"
-              },
-              {
-                "type": "STRING",
-                "value": ";"
-              }
-            ]
-          }
-        ]
-      }
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": "export"
+                    },
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "STRING",
+                          "value": "extern"
+                        },
+                        {
+                          "type": "CHOICE",
+                          "members": [
+                            {
+                              "type": "SYMBOL",
+                              "name": "STRINGLITERALSINGLE"
+                            },
+                            {
+                              "type": "BLANK"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "CHOICE",
+                          "members": [
+                            {
+                              "type": "STRING",
+                              "value": "inline"
+                            },
+                            {
+                              "type": "STRING",
+                              "value": "noinline"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "BLANK"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "FnProto"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": ";"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "Block"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": "export"
+                    },
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "STRING",
+                          "value": "extern"
+                        },
+                        {
+                          "type": "CHOICE",
+                          "members": [
+                            {
+                              "type": "SYMBOL",
+                              "name": "STRINGLITERALSINGLE"
+                            },
+                            {
+                              "type": "BLANK"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "threadlocal"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "VarDecl"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "usingnamespace"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_Expr"
+            },
+            {
+              "type": "STRING",
+              "value": ";"
+            }
+          ]
+        }
+      ]
     },
     "FnProto": {
       "type": "SEQ",
@@ -357,6 +366,18 @@
             {
               "type": "SYMBOL",
               "name": "ByteAlign"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "AddrSpace"
             },
             {
               "type": "BLANK"
@@ -460,6 +481,18 @@
             {
               "type": "SYMBOL",
               "name": "ByteAlign"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "AddrSpace"
             },
             {
               "type": "BLANK"
@@ -3062,6 +3095,27 @@
         }
       ]
     },
+    "AddrSpace": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "addrspace"
+        },
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_Expr"
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
     "CallConv": {
       "type": "SEQ",
       "members": [
@@ -3781,6 +3835,10 @@
                     "name": "ByteAlign"
                   },
                   {
+                    "type": "SYMBOL",
+                    "name": "AddrSpace"
+                  },
+                  {
                     "type": "CHOICE",
                     "members": [
                       {
@@ -3815,6 +3873,10 @@
                 "type": "CHOICE",
                 "members": [
                   {
+                    "type": "SYMBOL",
+                    "name": "AddrSpace"
+                  },
+                  {
                     "type": "SEQ",
                     "members": [
                       {
@@ -3841,7 +3903,7 @@
                               },
                               {
                                 "type": "SYMBOL",
-                                "name": "INTEGER"
+                                "name": "_Expr"
                               },
                               {
                                 "type": "STRING",
@@ -3849,7 +3911,7 @@
                               },
                               {
                                 "type": "SYMBOL",
-                                "name": "INTEGER"
+                                "name": "_Expr"
                               }
                             ]
                           },
@@ -5156,7 +5218,7 @@
               "members": [
                 {
                   "type": "PATTERN",
-                  "value": "[xXsedbocu*]{1}"
+                  "value": "[xXsedbocu*!]{1}"
                 },
                 {
                   "type": "STRING",
@@ -5183,21 +5245,8 @@
                   "type": "CHOICE",
                   "members": [
                     {
-                      "type": "SEQ",
-                      "members": [
-                        {
-                          "type": "PATTERN",
-                          "value": "[^\"\\\\\\{\\}]{1}"
-                        },
-                        {
-                          "type": "PATTERN",
-                          "value": "[<^>]{1}"
-                        },
-                        {
-                          "type": "PATTERN",
-                          "value": "[0-9]+"
-                        }
-                      ]
+                      "type": "PATTERN",
+                      "value": "[^\"\\\\\\{\\}]{1}[<^>]{1}[0-9]+"
                     },
                     {
                       "type": "BLANK"
@@ -5206,11 +5255,7 @@
                 },
                 {
                   "type": "PATTERN",
-                  "value": ".{0,1}"
-                },
-                {
-                  "type": "PATTERN",
-                  "value": "[0-9]*"
+                  "value": ".{0,1}[0-9]*"
                 }
               ]
             },
