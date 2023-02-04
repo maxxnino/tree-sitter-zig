@@ -88,107 +88,60 @@ field_constant: (IDENTIFIER) @constant
 (EscapeSequence) @string.escape
 (FormatSequence) @string.special
 
-[
-  "allowzero"
-  "volatile"
-  "anytype"
-  "anyframe"
-  (BuildinTypeExpr)
-] @type.builtin
-
 (BreakLabel (IDENTIFIER) @label)
 (BlockLabel (IDENTIFIER) @label)
 
 [
-  "true"
-  "false"
-] @boolean
-
-[
-  "undefined"
-  "unreachable"
-  "null"
-] @constant.builtin
-
-[
-  "else"
-  "if"
-  "switch"
-] @conditional
-
-[
-  "for"
-  "while"
-] @repeat
-
-[
-  "or"
+  "addrspace"
+  "align"
+  "allowzero"
   "and"
-  "orelse"
-] @keyword.operator
-
-[
-  "struct"
-  "enum"
-  "union"
-  "error"
-  "packed"
-  "opaque"
-] @keyword
-
-[
-  "try"
-  "error"
-  "catch"
-] @exception
-
-; VarDecl
-[
-  "const"
-  "var"
-  "comptime"
-  "threadlocal"
-  "fn"
-] @keyword.function
-
-[
-  "test"
-  "pub"
-  "usingnamespace"
-] @keyword
-
-[
-  "return"
-  "break"
-  "continue"
-] @keyword.return
-
-; Macro
-[
-  "defer"
-  "errdefer"
+  "anyframe"
+  "anytype"
+  "asm"
   "async"
-  "nosuspend"
   "await"
-  "suspend"
-  "resume"
+  "break"
+  "callconv"
+  "catch"
+  "comptime"
+  "const"
+  "continue"
+  "defer"
+  "else"
+  "enum"
+  "errdefer"
+  "error"
   "export"
   "extern"
-] @function.macro
-
-; PrecProc
-[
+  "fn"
+  "for"
+  "if"
   "inline"
-  "noinline"
-  "asm"
-  "callconv"
   "noalias"
-] @attribute
-
-[
+  "nosuspend"
+  "noinline"
+  "opaque"
+  "or"
+  "orelse"
+  "packed"
+  "pub"
+  "resume"
+  "return"
   "linksection"
-  "align" 
-] @function.builtin
+  "struct"
+  "suspend"
+  "switch"
+  "test"
+  "threadlocal"
+  "try"
+  "union"
+  "unreachable"
+  "usingnamespace"
+  "var"
+  "volatile"
+  "while"
+] @keyword
 
 [
   (CompareOp)
