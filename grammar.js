@@ -335,7 +335,7 @@ module.exports = grammar({
             ),
 
         IfExpr: ($) =>
-            prec.left(seq($.IfPrefix, $._Expr, optional($._ElseExprTail))),
+            prec.right(seq($.IfPrefix, $._Expr, optional($._ElseExprTail))),
 
         _ElseExprTail: ($) => seq(keyword("else", $), optional($.Payload), $._Expr),
 
@@ -345,10 +345,10 @@ module.exports = grammar({
             seq(optional(keyword("inline", $)), choice($.ForExpr, $.WhileExpr)),
 
         ForExpr: ($) =>
-            prec.left(seq($.ForPrefix, $._Expr, optional($._ElseExprTail))),
+            prec.right(seq($.ForPrefix, $._Expr, optional($._ElseExprTail))),
 
         WhileExpr: ($) =>
-            prec.left(seq($.WhilePrefix, $._Expr, optional($._ElseExprTail))),
+            prec.right(seq($.WhilePrefix, $._Expr, optional($._ElseExprTail))),
 
         _CurlySuffixExpr: ($) =>
             // INFO: solve #1 issue
@@ -452,7 +452,7 @@ module.exports = grammar({
         GroupedExpr: ($) => seq(LPAREN, $._Expr, RPAREN),
 
         IfTypeExpr: ($) =>
-            prec.left(seq($.IfPrefix, $._TypeExpr, optional($._ElseTypeExprTail))),
+            prec.right(seq($.IfPrefix, $._TypeExpr, optional($._ElseTypeExprTail))),
 
         _ElseTypeExprTail: ($) =>
             seq(keyword("else", $), optional($.Payload), $._TypeExpr),
@@ -470,10 +470,10 @@ module.exports = grammar({
             ),
 
         ForTypeExpr: ($) =>
-            prec.left(seq($.ForPrefix, $._TypeExpr, optional($._ElseTypeExprTail))),
+            prec.right(seq($.ForPrefix, $._TypeExpr, optional($._ElseTypeExprTail))),
 
         WhileTypeExpr: ($) =>
-            prec.left(seq($.WhilePrefix, $._TypeExpr, optional($._ElseTypeExprTail))),
+            prec.right(seq($.WhilePrefix, $._TypeExpr, optional($._ElseTypeExprTail))),
 
         SwitchExpr: ($) =>
             seq(
