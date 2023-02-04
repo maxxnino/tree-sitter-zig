@@ -833,6 +833,21 @@
     "fields": {}
   },
   {
+    "type": "ComptimeDecl",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "Block",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "ContainerDecl",
     "named": true,
     "fields": {},
@@ -840,6 +855,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "ComptimeDecl",
+          "named": true
+        },
         {
           "type": "ContainerDeclType",
           "named": true
@@ -849,15 +868,11 @@
           "named": true
         },
         {
+          "type": "Decl",
+          "named": true
+        },
+        {
           "type": "TestDecl",
-          "named": true
-        },
-        {
-          "type": "TopLevelComptime",
-          "named": true
-        },
-        {
-          "type": "TopLevelDecl",
           "named": true
         },
         {
@@ -932,7 +947,7 @@
     "fields": {
       "field_member": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "IDENTIFIER",
@@ -995,6 +1010,73 @@
         },
         {
           "type": "doc_comment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "Decl",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "AsmExpr",
+          "named": true
+        },
+        {
+          "type": "BinaryExpr",
+          "named": true
+        },
+        {
+          "type": "Block",
+          "named": true
+        },
+        {
+          "type": "BlockLabel",
+          "named": true
+        },
+        {
+          "type": "BreakLabel",
+          "named": true
+        },
+        {
+          "type": "ErrorUnionExpr",
+          "named": true
+        },
+        {
+          "type": "FnProto",
+          "named": true
+        },
+        {
+          "type": "IfExpr",
+          "named": true
+        },
+        {
+          "type": "InitList",
+          "named": true
+        },
+        {
+          "type": "LoopExpr",
+          "named": true
+        },
+        {
+          "type": "PrefixTypeOp",
+          "named": true
+        },
+        {
+          "type": "STRINGLITERALSINGLE",
+          "named": true
+        },
+        {
+          "type": "UnaryExpr",
+          "named": true
+        },
+        {
+          "type": "VarDecl",
           "named": true
         }
       ]
@@ -2656,97 +2738,11 @@
           "named": true
         },
         {
-          "type": "STRINGLITERALSINGLE",
-          "named": true
-        },
-        {
-          "type": "doc_comment",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "TopLevelComptime",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "BlockExpr",
-          "named": true
-        },
-        {
-          "type": "doc_comment",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "TopLevelDecl",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "AsmExpr",
-          "named": true
-        },
-        {
-          "type": "BinaryExpr",
-          "named": true
-        },
-        {
-          "type": "Block",
-          "named": true
-        },
-        {
-          "type": "BlockLabel",
-          "named": true
-        },
-        {
-          "type": "BreakLabel",
-          "named": true
-        },
-        {
-          "type": "ErrorUnionExpr",
-          "named": true
-        },
-        {
-          "type": "FnProto",
-          "named": true
-        },
-        {
-          "type": "IfExpr",
-          "named": true
-        },
-        {
-          "type": "InitList",
-          "named": true
-        },
-        {
-          "type": "LoopExpr",
-          "named": true
-        },
-        {
-          "type": "PrefixTypeOp",
+          "type": "IDENTIFIER",
           "named": true
         },
         {
           "type": "STRINGLITERALSINGLE",
-          "named": true
-        },
-        {
-          "type": "UnaryExpr",
-          "named": true
-        },
-        {
-          "type": "VarDecl",
           "named": true
         }
       ]
@@ -3128,19 +3124,19 @@
       "required": false,
       "types": [
         {
+          "type": "ComptimeDecl",
+          "named": true
+        },
+        {
           "type": "ContainerField",
           "named": true
         },
         {
+          "type": "Decl",
+          "named": true
+        },
+        {
           "type": "TestDecl",
-          "named": true
-        },
-        {
-          "type": "TopLevelComptime",
-          "named": true
-        },
-        {
-          "type": "TopLevelDecl",
           "named": true
         },
         {
