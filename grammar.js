@@ -123,6 +123,7 @@ module.exports = grammar({
     externals: (_) => [],
     inline: ($) => [$.Variable],
     extras: ($) => [/\s/, $.line_comment],
+    conflicts: ($) => [[$.LoopExpr], [$.LoopTypeExpr]],
     rules: {
         source_file: ($) =>
             seq(optional($.container_doc_comment), optional($._ContainerMembers)),
@@ -592,7 +593,7 @@ module.exports = grammar({
 
         // Switch specific
         SwitchProng: ($) =>
-            seq($.SwitchCase, EQUALRARROW, optional($.PtrIndexPayload), $.AssignExpr),
+            seq(optional("inline"), $.SwitchCase, EQUALRARROW, optional($.PtrIndexPayload), $.AssignExpr),
 
         SwitchCase: ($) => choice(sepBy1(COMMA, $.SwitchItem), keyword("else", $)),
 
