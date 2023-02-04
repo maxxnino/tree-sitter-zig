@@ -63,20 +63,17 @@ const AMPERSAND = "&",
     SLASHEQUAL = "/=",
     TILDE = "~",
     PREC = {
-        label: -1,
         curly: 1,
         assign: 2,
         primary: 3,
-        statement: 4,
-        paramType: 5,
-        or: 6,
-        and: 7,
-        comparative: 8,
-        bitwise: 9,
-        bitshift: 10,
-        addition: 11,
-        multiply: 12,
-        prefix: 13,
+        or: 4,
+        and: 5,
+        comparative: 6,
+        bitwise: 7,
+        bitshift: 8,
+        addition: 9,
+        multiply: 10,
+        prefix: 11,
     },
     buildin_type = [
         "bool",
@@ -139,32 +136,31 @@ module.exports = grammar({
         _ContainerDeclarations: ($) =>
             choice(
                 $.TestDecl,
-                $.TopLevelComptime,
+                $.ComptimeDecl,
                 seq(
                     optional($.doc_comment),
                     optional(keyword("pub", $)),
-                    $.TopLevelDecl
+                    $.Decl
                 )
             ),
 
         TestDecl: ($) =>
             seq(
-                optional($.doc_comment),
                 keyword("test", $),
-                optional($.STRINGLITERALSINGLE),
+                optional(choice($.STRINGLITERALSINGLE, $.IDENTIFIER)),
                 $.Block
             ),
 
-        TopLevelComptime: ($) =>
-            seq(optional($.doc_comment), keyword("comptime", $), $.BlockExpr),
+        ComptimeDecl: ($) =>
+            seq(keyword("comptime", $), $.Block),
 
-        TopLevelDecl: ($) =>
+        Decl: ($) =>
             choice(
                 seq(
                     optional(choice(
                         keyword("export", $),
                         seq(keyword("extern", $), optional($.STRINGLITERALSINGLE)),
-                        optional(keyword(choice("inline", "noinline"), $))
+                        keyword(choice("inline", "noinline"), $)
                     )),
                     $.FnProto,
                     choice(SEMICOLON, $.Block)
@@ -208,25 +204,25 @@ module.exports = grammar({
             ),
 
         ContainerField: ($) =>
-            seq(
-                optional($.doc_comment),
-                optional(keyword("comptime", $)),
-                field("field_member", $.IDENTIFIER),
-                optional(
-                    seq(
-                        COLON,
-                        choice(keyword("anytype", $), $._TypeExpr),
-                        optional($.ByteAlign)
-                    )
-                ),
-                optional(seq(EQUAL, $._Expr))
+            prec(PREC.curly,
+                seq(
+                    optional($.doc_comment),
+                    optional(keyword("comptime", $)),
+                    choice(
+                        seq(field("field_member", $.IDENTIFIER), optional(seq(COLON, $._TypeExpr))),
+                        // NOTE: $._TypeExpr already include fn
+                        seq(optional(seq(field("field_member", $.IDENTIFIER), COLON)), $._TypeExpr)
+                    ),
+                    optional($.ByteAlign),
+                    optional(seq(EQUAL, $._Expr))
+                )
             ),
 
         // *** Block Level ***
 
         Statement: ($) =>
             prec(
-                PREC.statement,
+                PREC.curly,
                 choice(
                     seq(optional(keyword("comptime", $)), $.VarDecl),
                     seq(
@@ -253,7 +249,7 @@ module.exports = grammar({
 
         LabeledStatement: ($) =>
             prec(
-                PREC.statement,
+                PREC.curly,
                 seq(optional($.BlockLabel), choice($.Block, $.LoopStatement))
             ),
 
@@ -323,9 +319,8 @@ module.exports = grammar({
             ),
 
         _PrimaryExpr: ($) =>
-            // INFO: left/right doesn't matter?
-            prec.left(
-                PREC.primary,
+            // INFO: This should be right or ErrorUnionExpr give error
+            prec.right(
                 choice(
                     $.AsmExpr,
                     $.IfExpr,
@@ -369,8 +364,11 @@ module.exports = grammar({
         _TypeExpr: ($) => seq(repeat($.PrefixTypeOp), $.ErrorUnionExpr),
 
         ErrorUnionExpr: ($) =>
-            // INFO: left and right doesn't matter?
-            prec.left(
+            // INFO: This be right or this will parse the code below to ErrorUnionExpr instead of Statement
+            //  fn foo3(b: usize) Error!usize {
+            //     return b;
+            // }
+            prec.right(
                 seq(
                     $.SuffixExpr,
                     optional(seq(field("exception", EXCLAMATIONMARK), $._TypeExpr))
@@ -533,7 +531,7 @@ module.exports = grammar({
         // *** Helper grammar ***
         BreakLabel: ($) => seq(COLON, $.IDENTIFIER),
 
-        BlockLabel: ($) => prec(PREC.label, seq($.IDENTIFIER, COLON)),
+        BlockLabel: ($) => prec.left(seq($.IDENTIFIER, COLON)),
 
         FieldInit: ($) =>
             seq(DOT, field("field_member", $.IDENTIFIER), EQUAL, $._Expr),
@@ -559,7 +557,7 @@ module.exports = grammar({
             ),
 
         ParamType: ($) =>
-            prec(PREC.paramType, choice(keyword("anytype", $), $._TypeExpr)),
+            prec(PREC.curly, choice(keyword("anytype", $), $._TypeExpr)),
 
         // Control flow prefixes
         IfPrefix: ($) =>
@@ -844,7 +842,7 @@ module.exports = grammar({
 
         LINESTRING: (_) => seq("\\\\", /[^\n]*/),
 
-        _STRINGLITERAL: ($) => choice($.STRINGLITERALSINGLE, repeat1($.LINESTRING)),
+        _STRINGLITERAL: ($) => prec.left(choice($.STRINGLITERALSINGLE, repeat1($.LINESTRING))),
 
         Variable: ($) => field("variable", $.IDENTIFIER),
 
