@@ -92,56 +92,104 @@ field_constant: (IDENTIFIER) @constant
 (BlockLabel (IDENTIFIER) @label)
 
 [
-  "addrspace"
-  "align"
-  "allowzero"
-  "and"
-  "anyframe"
-  "anytype"
   "asm"
   "async"
   "await"
-  "break"
-  "callconv"
-  "catch"
-  "comptime"
-  "const"
-  "continue"
   "defer"
-  "else"
-  "enum"
   "errdefer"
-  "error"
-  "export"
-  "extern"
-  "fn"
-  "for"
-  "if"
-  "inline"
-  "noalias"
   "nosuspend"
-  "noinline"
-  "opaque"
+  "resume"
+  "suspend"
+  "test"
+] @keyword
+
+[
+  "fn"
+] @keyword.function
+
+[
+  "and"
   "or"
   "orelse"
-  "packed"
-  "pub"
-  "resume"
+] @keyword.operator
+
+[
   "return"
-  "linksection"
-  "struct"
-  "suspend"
+  "break"
+  "continue"
+] @keyword.return
+
+[
+  "if"
+  "else"
   "switch"
-  "test"
-  "threadlocal"
-  "try"
-  "union"
-  "unreachable"
+] @conditional
+
+[
+  "for"
+  "while"
+] @repeat
+
+[
   "usingnamespace"
+] @include
+
+[
+  "try"
+  "catch"
+] @exception
+
+[
+  "void"
+  "noreturn"
+  "anytype"
+  "anyframe"
+  "anyopaque"
+  "anyerror"
+  (BuildinTypeExpr)
+] @type.builtin
+
+[
+  "struct"
+  "union"
+  "enum"
+  "opaque"
+  "error"
+] @type.definition
+
+[
+  "const"
   "var"
   "volatile"
-  "while"
-] @keyword
+  "allowzero"
+  "noalias"
+] @type.qualifier
+
+[
+  "addrspace"
+  "align"
+  "callconv"
+  "linksection"
+] @storageclass
+
+[
+  "comptime"
+  "export"
+  "extern"
+  "inline"
+  "noinline"
+  "packed"
+  "pub"
+  "threadlocal"
+] @attribute
+
+[
+  "null"
+  "unreachable"
+  "undefined"
+  "true"
+  "false"
+] @constant.builtin
 
 [
   (CompareOp)
