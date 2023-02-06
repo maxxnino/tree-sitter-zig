@@ -93,13 +93,9 @@ field_constant: (IDENTIFIER) @constant
 
 [
   "asm"
-  "async"
-  "await"
   "defer"
   "errdefer"
   "nosuspend"
-  "resume"
-  "suspend"
   "test"
 ] @keyword
 
@@ -117,6 +113,10 @@ field_constant: (IDENTIFIER) @constant
   "return"
   "break"
   "continue"
+  "async"
+  "await"
+  "suspend"
+  "resume"
 ] @keyword.return
 
 [
