@@ -140,12 +140,7 @@ field_constant: (IDENTIFIER) @constant
 ] @exception
 
 [
-  "void"
-  "noreturn"
   "anytype"
-  "anyframe"
-  "anyopaque"
-  "anyerror"
   (BuildinTypeExpr)
 ] @type.builtin
 
