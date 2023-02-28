@@ -1370,6 +1370,21 @@
     }
   },
   {
+    "type": "ForArgumentsList",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "ForItem",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "ForExpr",
     "named": true,
     "fields": {},
@@ -1433,12 +1448,12 @@
     }
   },
   {
-    "type": "ForPrefix",
+    "type": "ForItem",
     "named": true,
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "AsmExpr",
@@ -1481,11 +1496,26 @@
           "named": true
         },
         {
-          "type": "PtrIndexPayload",
+          "type": "UnaryExpr",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "ForPrefix",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "ForArgumentsList",
           "named": true
         },
         {
-          "type": "UnaryExpr",
+          "type": "PtrListPayload",
           "named": true
         }
       ]
@@ -2198,6 +2228,22 @@
   },
   {
     "type": "PtrIndexPayload",
+    "named": true,
+    "fields": {
+      "variable": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "IDENTIFIER",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "PtrListPayload",
     "named": true,
     "fields": {
       "variable": {
