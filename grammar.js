@@ -573,9 +573,7 @@ module.exports = grammar({
                 optional($.PtrPayload),
                 optional($.WhileContinueExpr)
             ),
-
-        ForPrefix: ($) =>
-            seq(keyword("for", $), LPAREN, $._Expr, RPAREN, $.PtrIndexPayload),
+        ForPrefix: ($) => seq(keyword("for", $), LPAREN, $.ForArgumentsList, RPAREN, $.PtrListPayload),
 
         // Payloads
         Payload: ($) => seq(PIPE, $.Variable, PIPE),
@@ -591,6 +589,8 @@ module.exports = grammar({
                 PIPE
             ),
 
+        PtrListPayload: ($) => seq( PIPE, sepBy1(COMMA, seq(optional(ASTERISK), $.Variable)), PIPE),
+
         // Switch specific
         SwitchProng: ($) =>
             seq(optional("inline"), $.SwitchCase, EQUALRARROW, optional($.PtrIndexPayload), $.AssignExpr),
@@ -598,6 +598,12 @@ module.exports = grammar({
         SwitchCase: ($) => choice(sepBy1(COMMA, $.SwitchItem), keyword("else", $)),
 
         SwitchItem: ($) => seq($._Expr, optional(seq(DOT3, $._Expr))),
+
+        // For specific
+        ForArgumentsList: ($) => sepBy1(COMMA, $.ForItem),
+
+        ForItem: ($) => seq($._Expr, optional(seq(DOT2,  optional($._Expr)))),
+
         AssignOp: (_) =>
             choice(
                 ASTERISKEQUAL,
