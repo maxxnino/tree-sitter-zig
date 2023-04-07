@@ -841,7 +841,8 @@ module.exports = grammar({
                         unescaped_string_fragment,
                         $.EscapeSequence,
                         $.FormatSequence,
-                        token.immediate(choice("{", "}"))
+                        token.immediate('{'),
+                        token.immediate('}')
                     )
                 ),
                 '"'
