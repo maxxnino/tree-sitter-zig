@@ -11,7 +11,7 @@ fi
 
 this_dir="${this_file%/*}"
 project_root="${this_dir%/*}"
-testing_dir="$project_root/test/sources"
+sources_dir="$project_root/test/sources"
 
 cd "$project_root"
 
@@ -19,7 +19,7 @@ clone_repo() {
   local owner=$1
   local name=$2
   local sha=$3
-  local path="$testing_dir/$name"
+  local path="$sources_dir/$name"
 
   if [ -d "$path" ]; then
     pushd "$path" > /dev/null
@@ -49,13 +49,13 @@ clone_repo ziglang zig b57081f039bd3f8f82210e8896e336e3c3a6869b
 known_failures=()
 while IFS= read -r line; do
   if [[ "$line" =~ [^[:space:]] ]]; then
-    full_path="$testing_dir/$line"
+    full_path="$sources_dir/$line"
     if [ -e "$full_path" ]; then
       if tree-sitter parse "$full_path" &>/dev/null; then
         >&2 echo "File $full_path can be parsed without errors, but it's listed in $this_dir/known-parsing-failures.txt"
         exit 1
       else
-        known_failures+=("$testing_dir/$line")
+        known_failures+=("$sources_dir/$line")
       fi
     else
       >&2 echo "File $full_path (listed in $this_dir/known-parsing-failures.txt) does not exist"
@@ -72,7 +72,7 @@ while IFS= read -r line; do
   done
   parse_args+=("$line")
 done < <(
-  find "$testing_dir" \
+  find "$sources_dir" \
     -name "*.zig" \
     -not -path "**/compile_errors/**"
 )
@@ -84,4 +84,4 @@ fi
 echo "[STEP] The following files will be tested:"
 printf "%s\n" "${parse_args[@]}"
 
-tree-sitter parse -q "${parse_args[@]}"
+tree-sitter parse "${parse_args[@]}"
