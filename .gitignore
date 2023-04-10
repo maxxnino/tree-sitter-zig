@@ -8,3 +8,4 @@ target
 /bindings/c/tree-sitter-*.pc
 /build
 /node_modules
+/test/sources

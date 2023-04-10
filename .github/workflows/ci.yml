@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - unlocked
+      - ready_for_review
+
+jobs:
+  test-parsing:
+    if: github.event.pull_request.draft != true
+    concurrency:
+      group: ci-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Install the tools
+        run: npm install
+
+      - name: Run the parsing tests
+        run: npm run test-parsing

@@ -14,9 +14,9 @@
     "tree-sitter-cli": "^0.20.1"
   },
   "scripts": {
-    "test": "tree-sitter test"
-  }
-  ,
+    "test": "tree-sitter test",
+    "test-parsing": "scripts/test-parsing"
+  },
   "tree-sitter": [
     {
       "scope": "source.zig",
