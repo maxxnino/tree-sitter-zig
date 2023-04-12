@@ -51,7 +51,7 @@ while IFS= read -r line; do
   if [[ "$line" =~ [^[:space:]] ]]; then
     full_path="$sources_dir/$line"
     if [ -e "$full_path" ]; then
-      if tree-sitter parse "$full_path" &>/dev/null; then
+      if tree-sitter parse -q "$full_path" &>/dev/null; then
         >&2 echo "File $full_path can be parsed without errors, but it's listed in $this_dir/known-parsing-failures.txt"
         saw_error=true
       else
@@ -87,4 +87,4 @@ fi
 echo "[STEP] The following files will be tested:"
 printf "%s\n" "${parse_args[@]}"
 
-tree-sitter parse "${parse_args[@]}"
+tree-sitter parse -q "${parse_args[@]}"
