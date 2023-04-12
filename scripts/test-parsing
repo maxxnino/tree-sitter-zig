@@ -53,16 +53,19 @@ while IFS= read -r line; do
     if [ -e "$full_path" ]; then
       if tree-sitter parse "$full_path" &>/dev/null; then
         >&2 echo "File $full_path can be parsed without errors, but it's listed in $this_dir/known-parsing-failures.txt"
-        exit 1
+        saw_error=true
       else
         known_failures+=("$sources_dir/$line")
       fi
     else
       >&2 echo "File $full_path (listed in $this_dir/known-parsing-failures.txt) does not exist"
-      exit 1
+      saw_error=true
     fi
   fi
 done < "$this_dir/known-parsing-failures.txt"
+if [ "${saw_error:-}" ]; then
+  exit 1
+fi
 
 while IFS= read -r line; do
   for known_failure in "${known_failures[@]}"; do
