@@ -77,7 +77,7 @@ while IFS= read -r line; do
 done < <(
   find "$sources_dir" \
     -name "*.zig" \
-    -not -path "**/compile_errors/**"
+    -not -path "$sources_dir/zig/test/cases/compile_errors/**"
 )
 if [ ${#parse_args[*]} -eq 0 ]; then
   >&2 echo "No files found to test"
