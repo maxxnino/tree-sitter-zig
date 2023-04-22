@@ -7,8 +7,6 @@ zig/test/behavior/slice_sentinel_comptime.zig
 zig/test/behavior/bugs/12972.zig
 zig/test/behavior/packed_struct_explicit_backing_int.zig
 zig/lib/std/os.zig
-zig/lib/std/array_hash_map.zig
-zig/lib/std/hash/auto_hash.zig
 zig/lib/std/fs.zig
 zig/lib/std/mem.zig
 zig/lib/std/zig/c_translation.zig
@@ -25,7 +23,6 @@ zig/lib/std/os/uefi/protocols/absolute_pointer_protocol.zig
 zig/lib/std/os/uefi/protocols/edid_override_protocol.zig
 zig/lib/std/os/uefi/tables/boot_services.zig
 zig/lib/std/unicode.zig
-zig/lib/std/meta/trait.zig
 zig/lib/std/Thread.zig
 zig/lib/std/mem/Allocator.zig
 zig/lib/std/json/test.zig
@@ -35,7 +32,6 @@ zig/lib/std/process.zig
 zig/lib/std/dwarf.zig
 zig/lib/std/json.zig
 zig/lib/std/c/openbsd.zig
-zig/lib/std/meta.zig
 zig/src/main.zig
 zig/src/link/Wasm/Object.zig
 zig/src/link/Wasm/Archive.zig
@@ -44,4 +40,3 @@ zig/src/Air.zig
 zig/src/codegen/llvm/bindings.zig
 zig/src/Autodoc.zig
 zig/src/Zir.zig
-zig/tools/process_headers.zig
