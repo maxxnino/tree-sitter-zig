@@ -1,4 +1,3 @@
-zig/test/cases/safety/slice with sentinel out of bounds - runtime len.zig
 zig/test/behavior/struct.zig
 zig/test/behavior/slice.zig
 zig/test/behavior/array.zig
@@ -10,7 +9,6 @@ zig/lib/std/os.zig
 zig/lib/std/fs.zig
 zig/lib/std/mem.zig
 zig/lib/std/zig/c_translation.zig
-zig/lib/std/zig/system/windows.zig
 zig/lib/std/os/test.zig
 zig/lib/std/os/linux/bpf/btf.zig
 zig/lib/std/os/linux/bpf.zig
@@ -24,19 +22,11 @@ zig/lib/std/os/uefi/protocols/edid_override_protocol.zig
 zig/lib/std/os/uefi/tables/boot_services.zig
 zig/lib/std/unicode.zig
 zig/lib/std/Thread.zig
-zig/lib/std/mem/Allocator.zig
 zig/lib/std/json/test.zig
-zig/lib/std/child_process.zig
 zig/lib/std/macho.zig
-zig/lib/std/process.zig
-zig/lib/std/dwarf.zig
-zig/lib/std/json.zig
 zig/lib/std/c/openbsd.zig
-zig/src/main.zig
 zig/src/link/Wasm/Object.zig
 zig/src/link/Wasm/Archive.zig
 zig/src/link/MachO/Archive.zig
-zig/src/Air.zig
 zig/src/codegen/llvm/bindings.zig
 zig/src/Autodoc.zig
-zig/src/Zir.zig

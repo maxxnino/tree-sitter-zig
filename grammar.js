@@ -63,6 +63,7 @@ const AMPERSAND = "&",
     SLASHEQUAL = "/=",
     TILDE = "~",
     PREC = {
+        sentinelTerminatedExpr: 0,
         curly: 1,
         assign: 2,
         primary: 3,
@@ -403,6 +404,27 @@ module.exports = grammar({
                 )
             ),
 
+        /*
+          Given a sentinel-terminated expression, for instance `foo[bar..bar:
+          0]`, note how "bar: " resembles the opening of a labeled block; due to
+          that label-like syntax, Tree-sitter would try to parse what comes
+          after the COLON as a block, which would obviously fail in this case.
+          To work around that problem:
+          - First, we create a SentinelTerminatedExpr rule which would
+            conflict *on purpose* with the BlockLabel rule (hence why they
+            share a common definition).
+          - Second, we give SentinelTerminatedExpr a higher precedence over
+            BlockLabel, which makes Tree-sitter prioritize matching
+            the former first. Since SentinelTerminatedExpr ends with an
+            arbitrary Expr instead of a block, we should be able to parse all
+            kinds of sentinel-terminated expression; if that does not work, the
+            parser will then fallback to matching the BlockLabel.
+        */
+        _SentinelTerminatedExpr: ($) => prec(
+            PREC.sentinelTerminatedExpr,
+            seq(...blockLabel($), $._Expr)
+        ),
+
         _PrimaryTypeExpr: ($) =>
             choice(
                 seq($.BUILTINIDENTIFIER, $.FnCallArguments),
@@ -530,7 +552,7 @@ module.exports = grammar({
         // *** Helper grammar ***
         BreakLabel: ($) => seq(COLON, $.IDENTIFIER),
 
-        BlockLabel: ($) => prec.left(seq($.IDENTIFIER, COLON)),
+        BlockLabel: ($) => prec.left(seq(...blockLabel($))),
 
         FieldInit: ($) =>
             seq(DOT, field("field_member", $.IDENTIFIER), EQUAL, $._Expr),
@@ -715,7 +737,10 @@ module.exports = grammar({
                 seq(
                     LBRACKET,
                     $._Expr,
-                    optional(seq(DOT2, optional($._Expr), optional(seq(COLON, $._Expr)))),
+                    optional(seq(DOT2, optional(choice(
+                      $._SentinelTerminatedExpr,
+                      seq($._Expr, optional(seq(COLON, $._Expr))
+                    ))))),
                     RBRACKET
                 ),
                 DOTASTERISK,
@@ -868,4 +893,13 @@ function keyword(rule, _) {
 }
 function sepBy(sep, rule) {
     return optional(sepBy1(sep, rule));
+}
+
+/*
+  This rule was extracted as a function for the sake of making
+  _SentinelTerminatedExpr and BlockLabel share the same definition. Please check
+  the comment of _SentinelTerminatedExpr for more context.
+*/
+function blockLabel($) {
+  return [$.IDENTIFIER, COLON]
 }
