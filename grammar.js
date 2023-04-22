@@ -63,7 +63,6 @@ const AMPERSAND = "&",
     SLASHEQUAL = "/=",
     TILDE = "~",
     PREC = {
-        sentinelTerminatedExpr: 0,
         curly: 1,
         assign: 2,
         primary: 3,
@@ -404,27 +403,6 @@ module.exports = grammar({
                 )
             ),
 
-        /*
-          Given a sentinel-terminated expression, for instance `foo[bar..bar:
-          0]`, note how "bar: " resembles the opening of a labeled block; due to
-          that label-like syntax, Tree-sitter would try to parse what comes
-          after the COLON as a block, which would obviously fail in this case.
-          To work around that problem:
-          - First, we create a SentinelTerminatedExpr rule which would
-            conflict *on purpose* with the BlockLabel rule (hence why they
-            share a common definition).
-          - Second, we give SentinelTerminatedExpr a higher precedence over
-            BlockLabel, which makes Tree-sitter prioritize matching
-            the former first. Since SentinelTerminatedExpr ends with an
-            arbitrary Expr instead of a block, we should be able to parse all
-            kinds of sentinel-terminated expression; if that does not work, the
-            parser will then fallback to matching the BlockLabel.
-        */
-        _SentinelTerminatedExpr: ($) => prec(
-            PREC.sentinelTerminatedExpr,
-            seq(...blockLabel($), $._Expr)
-        ),
-
         _PrimaryTypeExpr: ($) =>
             choice(
                 seq($.BUILTINIDENTIFIER, $.FnCallArguments),
@@ -732,15 +710,29 @@ module.exports = grammar({
                 $.ArrayTypeStart
             ),
 
+        /*
+          Given a sentinel-terminated expression, e.g. `foo[bar..bar: 0]`, note
+          how "bar: " resembles the opening of a labeled block; due to that
+          label-like syntax, Tree-sitter would try to parse what comes after the
+          COLON as a block, which would obviously fail in this case. To work
+          around that problem, we'll create a SentinelTerminatedExpr rule which
+          starts like the the BlockLabel rule (hence why they share a common
+          definition), but ends with an arbitrary Expr instead of a block.
+          BlockLabel should have preferential precedence based on its usage sites
+          throughout the rest of the grammar, thus this rule effectively serves
+          as a fallback for the former.
+        */
+        _SentinelTerminatedExpr: ($) => choice(
+          seq(...blockLabel($), $._Expr),
+          seq($._Expr, optional(seq(COLON, $._Expr)))
+        ),
+
         SuffixOp: ($) =>
             choice(
                 seq(
                     LBRACKET,
                     $._Expr,
-                    optional(seq(DOT2, optional(choice(
-                      $._SentinelTerminatedExpr,
-                      seq($._Expr, optional(seq(COLON, $._Expr))
-                    ))))),
+                    optional(seq(DOT2, optional($._SentinelTerminatedExpr))),
                     RBRACKET
                 ),
                 DOTASTERISK,
