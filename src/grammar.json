@@ -1913,42 +1913,12 @@
                 "name": "_PrimaryTypeExpr"
               },
               {
-                "type": "SEQ",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "_PrimaryTypeExpr"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "FnCallArguments"
-                  }
-                ]
-              },
-              {
                 "type": "FIELD",
                 "name": "variable_type_function",
                 "content": {
                   "type": "SYMBOL",
                   "name": "IDENTIFIER"
                 }
-              },
-              {
-                "type": "SEQ",
-                "members": [
-                  {
-                    "type": "FIELD",
-                    "name": "function_call",
-                    "content": {
-                      "type": "SYMBOL",
-                      "name": "IDENTIFIER"
-                    }
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "FnCallArguments"
-                  }
-                ]
               }
             ]
           },
@@ -1962,21 +1932,12 @@
                   "name": "SuffixOp"
                 },
                 {
-                  "type": "SEQ",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "SuffixOp"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "FnCallArguments"
-                    }
-                  ]
+                  "type": "SYMBOL",
+                  "name": "FieldOrFnCall"
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "FieldOrFnCall"
+                  "name": "FnCallArguments"
                 }
               ]
             }
@@ -4141,6 +4102,58 @@
         }
       ]
     },
+    "_SentinelTerminatedExpr": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "IDENTIFIER"
+            },
+            {
+              "type": "STRING",
+              "value": ":"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_Expr"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_Expr"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": ":"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "_Expr"
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
     "SuffixOp": {
       "type": "CHOICE",
       "members": [
@@ -4170,28 +4183,7 @@
                       "members": [
                         {
                           "type": "SYMBOL",
-                          "name": "_Expr"
-                        },
-                        {
-                          "type": "BLANK"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "CHOICE",
-                      "members": [
-                        {
-                          "type": "SEQ",
-                          "members": [
-                            {
-                              "type": "STRING",
-                              "value": ":"
-                            },
-                            {
-                              "type": "SYMBOL",
-                              "name": "_Expr"
-                            }
-                          ]
+                          "name": "_SentinelTerminatedExpr"
                         },
                         {
                           "type": "BLANK"
@@ -5491,17 +5483,15 @@
               {
                 "type": "IMMEDIATE_TOKEN",
                 "content": {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "STRING",
-                      "value": "{"
-                    },
-                    {
-                      "type": "STRING",
-                      "value": "}"
-                    }
-                  ]
+                  "type": "STRING",
+                  "value": "{"
+                }
+              },
+              {
+                "type": "IMMEDIATE_TOKEN",
+                "content": {
+                  "type": "STRING",
+                  "value": "}"
                 }
               }
             ]

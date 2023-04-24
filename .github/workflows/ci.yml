@@ -43,10 +43,10 @@ jobs:
             files_changed_msg="$output"
 
             diff="$(git diff --cached --color=never)"
-            echo "${diff::1000}"
             if [ ${#diff} -gt 1000 ]; then
-              echo "-- TRUNCATED --"$'\n'
+              diff="${diff::1000}-- TRUNCATED --"
             fi
+            echo "$diff"$'\n'
           else
             fail_code=$?
           fi
