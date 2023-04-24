@@ -38,7 +38,8 @@ jobs:
 
       - name: Check if auto-generated files are committed
         run: |
-          if output="$(git diff-index HEAD)"; then
+          git add .
+          if output="$(git diff HEAD)"; then
             files_changed_msg="$output"
           else
             fail_code=$?
