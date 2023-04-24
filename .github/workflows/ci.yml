@@ -30,7 +30,7 @@ jobs:
           node -v
           npm -v
           gcc -v
-          npm install
+          npm ci
           ./node_modules/.bin/tree-sitter --version
 
       - name: Generate the parser
