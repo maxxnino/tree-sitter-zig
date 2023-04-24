@@ -40,13 +40,13 @@ jobs:
         run: |
           git add .
           if output="$(git status --porcelain=v2)"; then
+            files_changed_msg="$output"
+
             diff="$(git diff --cached --color=never)"
             echo "${diff::1000}"
             if [ ${#diff} -gt 1000 ]; then
               echo "-- TRUNCATED --"$'\n'
             fi
-
-            files_changed_msg="$output"
           else
             fail_code=$?
           fi
