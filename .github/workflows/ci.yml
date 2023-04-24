@@ -26,10 +26,16 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Install the tools
+      - name: Setup tools
         run: npm install
 
-      - name: Run the parsing tests
+      - name: Generate the files
         run: |
           npm run generate
-          npm run test-parsing
+          if ! git diff-index --quiet HEAD; then
+            echo 'Please run `npm run generate` and commit the changes'
+            exit 1
+          end
+
+      - name: Run the parsing tests
+        run: npm run test-parsing
