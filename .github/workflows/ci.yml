@@ -13,23 +13,53 @@ on:
       - synchronize
       - reopened
       - unlocked
-      - ready_for_review
 
 jobs:
   test-parsing:
-    if: github.event.pull_request.draft != true
     concurrency:
-      group: ci-${{ github.event.pull_request.number || github.ref }}
+      group: ci-${{ github.event.pull_request.number }}
       cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Install the tools
-        run: npm install
+      - name: Setup tools
+        run: |
+          set -x
+          node -v
+          npm -v
+          gcc -v
+          npm ci
+          ./node_modules/.bin/tree-sitter --version
+
+      - name: Generate the parser
+        run: npm run generate
+
+      - name: Check if auto-generated files are committed
+        run: |
+          git add .
+          if output="$(git status --porcelain=v2)"; then
+            files_changed_msg="$output"
+
+            diff="$(git diff --cached --color=never)"
+            echo "${diff::1000}"
+            if [ ${#diff} -gt 1000 ]; then
+              echo "-- TRUNCATED --"$'\n'
+            fi
+          else
+            fail_code=$?
+          fi
+
+          if [ "${fail_code:-}" ]; then
+            exit $fail_code
+          elif [ "${files_changed_msg:-}" ]; then
+            >&2 echo \
+              "Detected changes after generating parser files:" \
+              $'\n'"$files_changed_msg"$'\n' \
+              $'\n'"Please commit those changes locally and push"
+            exit 1
+          fi
 
       - name: Run the parsing tests
-        run: |
-          npm run generate
-          npm run test-parsing
+        run: npm run test-parsing
