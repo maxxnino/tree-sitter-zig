@@ -45,6 +45,10 @@ clone_repo() {
 
 # zig 0.10.1 -> https://github.com/ziglang/zig/releases/tag/0.10.1
 clone_repo ziglang zig b57081f039bd3f8f82210e8896e336e3c3a6869b
+# the following projects should be compatible with the zig version above
+clone_repo tigerbeetledb tigerbeetle eff4158fb7f39f7557f646d7eb1bde39d8459d22
+clone_repo zigtools zls fa5828496eb8b554ec69ed0beff7a9edcb53411a
+clone_repo oven-sh bun cd5f2ab11fb33e805271b9b48711f3f592f30b0f
 
 inexistent_failures=()
 incorrect_failures=()
