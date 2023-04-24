@@ -17,7 +17,6 @@ on:
 
 jobs:
   test-parsing:
-    if: github.event.pull_request.draft != true
     concurrency:
       group: ci-${{ github.event.pull_request.number }}
       cancel-in-progress: true
