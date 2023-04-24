@@ -13,7 +13,6 @@ on:
       - synchronize
       - reopened
       - unlocked
-      - ready_for_review
 
 jobs:
   test-parsing:
