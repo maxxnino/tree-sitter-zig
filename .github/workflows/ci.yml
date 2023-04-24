@@ -33,13 +33,24 @@ jobs:
           npm install
           ./node_modules/.bin/tree-sitter --version
 
-      - name: Generate the files
+      - name: Generate the parser
+        run: npm run generate
+
+      - name: Check if generated files are up-to-date
         run: |
-          cmd=(npm run generate)
-          "${cmd[@]}"
-          if ! git diff-index HEAD; then
-            >&2 echo "Detected changes after running \`${cmd[*]}\`"
-            >&2 echo "Please run \`${cmd[*]}\` locally, then commit the changes and push"
+          if output="$(git diff-index HEAD)"; then
+            files_changed_msg="$output"
+          else
+            fail_code=$?
+          fi
+
+          if [ "${fail_code:-}" ]; then
+            exit $fail_code
+          elif [ "${files_changed_msg:-}" ]; then
+            >&2 echo \
+              "Detected changes after generating parser files:" \
+              $'\n'"$files_changed_msg"$'\n' \
+              $'\n'"Please run \`npm run generate\` locally and push the changes"
             exit 1
           fi
 
