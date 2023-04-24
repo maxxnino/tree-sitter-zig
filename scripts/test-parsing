@@ -46,13 +46,14 @@ clone_repo() {
 # zig 0.10.1 -> https://github.com/ziglang/zig/releases/tag/0.10.1
 clone_repo ziglang zig b57081f039bd3f8f82210e8896e336e3c3a6869b
 
+incorrect_failures=()
 known_failures=()
 while IFS= read -r line; do
   if [[ "$line" =~ [^[:space:]] ]]; then
     full_path="$sources_dir/$line"
     if [ -e "$full_path" ]; then
       if tree-sitter parse -q "$full_path" &>/dev/null; then
-        >&2 echo "File $full_path can be parsed without errors, but it's listed in $this_dir/known-parsing-failures.txt"
+        incorrect_failures+=("$full_path")
         saw_error=true
       else
         known_failures+=("$sources_dir/$line")
@@ -63,7 +64,9 @@ while IFS= read -r line; do
     fi
   fi
 done < "$this_dir/known-parsing-failures.txt"
-if [ "${saw_error:-}" ]; then
+if [ ${#incorrect_failures[*]} -gt 0 ]; then
+  >&2 echo "The following files can be parsed without errors, but they are listed in $this_dir/known-parsing-failures.txt. Please remove those files from $this_dir/known-parsing-failures.txt and try again:"
+  >&2 printf -- "- %s\n" "${incorrect_failures[@]}"
   exit 1
 fi
 

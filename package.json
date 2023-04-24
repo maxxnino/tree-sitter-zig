@@ -16,7 +16,8 @@
   "scripts": {
     "test": "tree-sitter test",
     "generate": "tree-sitter generate",
-    "test-parsing": "scripts/test-parsing"
+    "test-parsing": "scripts/test-parsing",
+    "parse": "tree-sitter parse"
   },
   "tree-sitter": [
     {

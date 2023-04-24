@@ -147,6 +147,7 @@ module.exports = grammar({
 
         TestDecl: ($) =>
             seq(
+                optional($.doc_comment),
                 keyword("test", $),
                 optional(choice($.STRINGLITERALSINGLE, $.IDENTIFIER)),
                 $.Block
@@ -205,14 +206,22 @@ module.exports = grammar({
             ),
 
         ContainerField: ($) =>
-            prec(PREC.curly,
+            prec(PREC.assign,
                 seq(
                     optional($.doc_comment),
                     optional(keyword("comptime", $)),
                     choice(
-                        seq(field("field_member", $.IDENTIFIER), optional(seq(COLON, $._TypeExpr))),
+                        seq(
+                          field("field_member", choice(
+                            $.IDENTIFIER,
+                            alias($.BuildinTypeExpr, $.IDENTIFIER)
+                          )),
+                          COLON,
+                          optional($.ArrayTypeStart),
+                          $._TypeExpr,
+                        ),
                         // NOTE: $._TypeExpr already include fn
-                        seq(optional(seq(field("field_member", $.IDENTIFIER), COLON)), $._TypeExpr)
+                        $._TypeExpr
                     ),
                     optional($.ByteAlign),
                     optional(seq(EQUAL, $._Expr))
@@ -549,7 +558,13 @@ module.exports = grammar({
                 seq(
                     optional($.doc_comment),
                     optional(keyword(choice("noalias", "comptime"), $)),
-                    optional(seq(field("parameter", $.IDENTIFIER), COLON)),
+                    optional(seq(
+                      field("parameter", choice(
+                        $.IDENTIFIER,
+                        alias($.BuildinTypeExpr, $.IDENTIFIER)
+                      )),
+                      COLON
+                    )),
                     $.ParamType
                 ),
                 DOT3
@@ -757,8 +772,12 @@ module.exports = grammar({
                 )
             ),
 
-        ArrayTypeStart: ($) =>
-            seq(LBRACKET, $._Expr, optional(seq(COLON, $._Expr)), RBRACKET),
+        ArrayTypeStart: ($) => seq(
+          LBRACKET,
+          choice($._Expr, $.IDENTIFIER),
+          optional(seq(COLON, choice($._Expr, $.IDENTIFIER))),
+          RBRACKET
+        ),
 
         // ContainerDecl specific
         _ContainerDeclAuto: ($) =>
@@ -772,7 +791,10 @@ module.exports = grammar({
 
         ContainerDeclType: ($) =>
             choice(
-                keyword("struct", $),
+                seq(
+                  keyword("struct", $),
+                  optional(seq(LPAREN, $._Expr, RPAREN))
+                ),
                 keyword("opaque", $),
                 seq(keyword("enum", $), optional(seq(LPAREN, $._Expr, RPAREN))),
                 seq(
