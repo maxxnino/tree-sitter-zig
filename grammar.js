@@ -739,6 +739,7 @@ module.exports = grammar({
         */
         _SentinelTerminatedExpr: ($) => choice(
           seq(...blockLabel($), $._Expr),
+          seq(COLON, $._Expr),
           seq($._Expr, optional(seq(COLON, $._Expr)))
         ),
 
@@ -775,6 +776,7 @@ module.exports = grammar({
         ArrayTypeStart: ($) => seq(
           LBRACKET,
           choice($._Expr, $.IDENTIFIER),
+          optional(DOT2),
           optional(seq(COLON, choice($._Expr, $.IDENTIFIER))),
           RBRACKET
         ),

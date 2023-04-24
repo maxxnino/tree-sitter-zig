@@ -49,20 +49,22 @@ clone_repo ziglang zig b57081f039bd3f8f82210e8896e336e3c3a6869b
 inexistent_failures=()
 incorrect_failures=()
 known_failures=()
-while IFS= read -r line; do
-  if [[ "$line" =~ [^[:space:]] ]]; then
-    full_path="$sources_dir/$line"
-    if [ -e "$full_path" ]; then
-      if tree-sitter parse -q "$full_path" &>/dev/null; then
-        incorrect_failures+=("$line")
+if [ -e "$this_dir/known-parsing-failures.txt" ]; then
+  while IFS= read -r line; do
+    if [[ "$line" =~ [^[:space:]] ]]; then
+      full_path="$sources_dir/$line"
+      if [ -e "$full_path" ]; then
+        if tree-sitter parse -q "$full_path" &>/dev/null; then
+          incorrect_failures+=("$line")
+        else
+          known_failures+=("$sources_dir/$line")
+        fi
       else
-        known_failures+=("$sources_dir/$line")
+        inexistent_failures+=("$line")
       fi
-    else
-      inexistent_failures+=("$line")
     fi
-  fi
-done < "$this_dir/known-parsing-failures.txt"
+  done < "$this_dir/known-parsing-failures.txt"
+fi
 if [ ${#incorrect_failures[*]} -gt 0 ]; then
   >&2 echo "The following files can be parsed without errors, but they are listed in $this_dir/known-parsing-failures.txt. Please remove them from $this_dir/known-parsing-failures.txt and try again:"
   >&2 printf -- "- %s\n" "${incorrect_failures[@]}"
