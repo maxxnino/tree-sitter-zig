@@ -38,7 +38,7 @@ jobs:
         run: |
           cmd=(npm run generate)
           "${cmd[@]}"
-          if ! git diff-index --quiet HEAD; then
+          if ! git diff-index HEAD; then
             >&2 echo "Detected changes after running \`${cmd[*]}\`"
             >&2 echo "Please run \`${cmd[*]}\` locally, then commit the changes and push"
             exit 1
