@@ -36,7 +36,7 @@ jobs:
       - name: Generate the parser
         run: npm run generate
 
-      - name: Check if generated files are up-to-date
+      - name: Check if auto-generated files are committed
         run: |
           if output="$(git diff-index HEAD)"; then
             files_changed_msg="$output"
@@ -50,7 +50,7 @@ jobs:
             >&2 echo \
               "Detected changes after generating parser files:" \
               $'\n'"$files_changed_msg"$'\n' \
-              $'\n'"Please run \`npm run generate\` locally and push the changes"
+              $'\n'"Please commit those changes locally and push"
             exit 1
           fi
 
