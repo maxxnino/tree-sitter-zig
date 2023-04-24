@@ -28,10 +28,10 @@ jobs:
       - name: Setup tools
         run: |
           set -x
-          npm install
           node -v
           npm -v
           gcc -v
+          npm install
           ./node_modules/.bin/tree-sitter --version
 
       - name: Generate the files
