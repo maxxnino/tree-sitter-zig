@@ -46,6 +46,7 @@ clone_repo() {
 # zig 0.10.1 -> https://github.com/ziglang/zig/releases/tag/0.10.1
 clone_repo ziglang zig b57081f039bd3f8f82210e8896e336e3c3a6869b
 
+inexistent_failures=()
 incorrect_failures=()
 known_failures=()
 while IFS= read -r line; do
@@ -53,20 +54,23 @@ while IFS= read -r line; do
     full_path="$sources_dir/$line"
     if [ -e "$full_path" ]; then
       if tree-sitter parse -q "$full_path" &>/dev/null; then
-        incorrect_failures+=("$full_path")
-        saw_error=true
+        incorrect_failures+=("$line")
       else
         known_failures+=("$sources_dir/$line")
       fi
     else
-      >&2 echo "File $full_path (listed in $this_dir/known-parsing-failures.txt) does not exist"
-      saw_error=true
+      inexistent_failures+=("$line")
     fi
   fi
 done < "$this_dir/known-parsing-failures.txt"
 if [ ${#incorrect_failures[*]} -gt 0 ]; then
-  >&2 echo "The following files can be parsed without errors, but they are listed in $this_dir/known-parsing-failures.txt. Please remove those files from $this_dir/known-parsing-failures.txt and try again:"
+  >&2 echo "The following files can be parsed without errors, but they are listed in $this_dir/known-parsing-failures.txt. Please remove them from $this_dir/known-parsing-failures.txt and try again:"
   >&2 printf -- "- %s\n" "${incorrect_failures[@]}"
+  exit 1
+fi
+if [ ${#inexistent_failures[*]} -gt 0 ]; then
+  >&2 echo "The following files do not exist. Please remove them from $this_dir/known-parsing-failures.txt and try again:"
+  >&2 printf -- "- %s\n" "${inexistent_failures[@]}"
   exit 1
 fi
 
