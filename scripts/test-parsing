@@ -84,7 +84,8 @@ if [ ${#parse_args[*]} -eq 0 ]; then
   exit 1
 fi
 
-echo "[STEP] The following files will be tested:"
-printf "%s\n" "${parse_args[@]}"
+echo $'\n'"The following files will be parsed:"
+printf -- "- %s\n" "${parse_args[@]}"
+echo $'\n'
 
 tree-sitter parse -q "${parse_args[@]}"

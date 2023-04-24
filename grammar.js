@@ -383,15 +383,13 @@ module.exports = grammar({
                     optional(keyword("async", $)),
                     choice(
                         $._PrimaryTypeExpr,
-                        seq($._PrimaryTypeExpr, $.FnCallArguments),
                         field("variable_type_function", $.IDENTIFIER),
-                        seq(field("function_call", $.IDENTIFIER), $.FnCallArguments)
                     ),
                     repeat(
                         choice(
                             $.SuffixOp,
-                            seq($.SuffixOp, $.FnCallArguments),
-                            $.FieldOrFnCall
+                            $.FieldOrFnCall,
+                            $.FnCallArguments,
                         )
                     )
                 )
