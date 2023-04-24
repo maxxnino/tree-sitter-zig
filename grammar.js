@@ -530,7 +530,7 @@ module.exports = grammar({
         // *** Helper grammar ***
         BreakLabel: ($) => seq(COLON, $.IDENTIFIER),
 
-        BlockLabel: ($) => prec.left(seq($.IDENTIFIER, COLON)),
+        BlockLabel: ($) => prec.left(seq(...blockLabel($))),
 
         FieldInit: ($) =>
             seq(DOT, field("field_member", $.IDENTIFIER), EQUAL, $._Expr),
@@ -710,12 +710,29 @@ module.exports = grammar({
                 $.ArrayTypeStart
             ),
 
+        /*
+          Given a sentinel-terminated expression, e.g. `foo[bar..bar: 0]`, note
+          how "bar: " resembles the opening of a labeled block; due to that
+          label-like syntax, Tree-sitter would try to parse what comes after the
+          COLON as a block, which would obviously fail in this case. To work
+          around that problem, we'll create a SentinelTerminatedExpr rule which
+          starts like the the BlockLabel rule (hence why they share a common
+          definition), but ends with an arbitrary Expr instead of a block.
+          BlockLabel should have preferential precedence based on its usage sites
+          throughout the rest of the grammar, thus this rule effectively serves
+          as a fallback for the former.
+        */
+        _SentinelTerminatedExpr: ($) => choice(
+          seq(...blockLabel($), $._Expr),
+          seq($._Expr, optional(seq(COLON, $._Expr)))
+        ),
+
         SuffixOp: ($) =>
             choice(
                 seq(
                     LBRACKET,
                     $._Expr,
-                    optional(seq(DOT2, optional($._Expr), optional(seq(COLON, $._Expr)))),
+                    optional(seq(DOT2, optional($._SentinelTerminatedExpr))),
                     RBRACKET
                 ),
                 DOTASTERISK,
@@ -868,4 +885,13 @@ function keyword(rule, _) {
 }
 function sepBy(sep, rule) {
     return optional(sepBy1(sep, rule));
+}
+
+/*
+  This rule was extracted as a function for the sake of making
+  _SentinelTerminatedExpr and BlockLabel share the same definition. Please check
+  the comment of _SentinelTerminatedExpr for more context.
+*/
+function blockLabel($) {
+  return [$.IDENTIFIER, COLON]
 }
