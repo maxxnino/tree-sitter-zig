@@ -12,8 +12,6 @@ this_dir="${this_file%/*}"
 project_root="${this_dir%/*}"
 queries_dir="$project_root/queries"
 
-cd "$project_root"
-
 while IFS= read -r query; do
   # this tests if the queries can be compiled, not if they are producing the
   # expected output
