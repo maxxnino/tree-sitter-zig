@@ -92,6 +92,10 @@
           "named": true
         },
         {
+          "type": "IDENTIFIER",
+          "named": true
+        },
+        {
           "type": "IfExpr",
           "named": true
         },
@@ -958,8 +962,12 @@
     },
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
+        {
+          "type": "ArrayTypeStart",
+          "named": true
+        },
         {
           "type": "AsmExpr",
           "named": true
@@ -2783,6 +2791,10 @@
         },
         {
           "type": "STRINGLITERALSINGLE",
+          "named": true
+        },
+        {
+          "type": "doc_comment",
           "named": true
         }
       ]

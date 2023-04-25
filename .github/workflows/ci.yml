@@ -63,3 +63,6 @@ jobs:
 
       - name: Run the parsing tests
         run: npm run test-parsing
+
+      - name: Run the query tests
+        run: npm run test-queries
