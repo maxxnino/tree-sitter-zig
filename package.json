@@ -17,6 +17,7 @@
     "test": "tree-sitter test",
     "generate": "tree-sitter generate",
     "test-parsing": "scripts/test-parsing",
+    "test-queries": "scripts/test-queries",
     "parse": "tree-sitter parse"
   },
   "tree-sitter": [
