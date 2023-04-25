@@ -46,14 +46,16 @@ clone_repo() {
 # zig 0.10.1 -> https://github.com/ziglang/zig/releases/tag/0.10.1
 clone_repo ziglang zig b57081f039bd3f8f82210e8896e336e3c3a6869b
 # the following projects should be compatible with the zig version above
+# the commits were chosen through `git log -1 --until="$ZIG_RELEASE_DATE"`
 clone_repo tigerbeetledb tigerbeetle eff4158fb7f39f7557f646d7eb1bde39d8459d22
 clone_repo zigtools zls fa5828496eb8b554ec69ed0beff7a9edcb53411a
 clone_repo oven-sh bun cd5f2ab11fb33e805271b9b48711f3f592f30b0f
 
+failures_file="$this_dir/known-parsing-failures.txt"
 inexistent_failures=()
 incorrect_failures=()
 known_failures=()
-if [ -e "$this_dir/known-parsing-failures.txt" ]; then
+if [ -e "$failures_file" ]; then
   while IFS= read -r line; do
     if [[ "$line" =~ [^[:space:]] ]]; then
       full_path="$sources_dir/$line"
@@ -67,15 +69,15 @@ if [ -e "$this_dir/known-parsing-failures.txt" ]; then
         inexistent_failures+=("$line")
       fi
     fi
-  done < "$this_dir/known-parsing-failures.txt"
+  done < "$failures_file"
 fi
 if [ ${#incorrect_failures[*]} -gt 0 ]; then
-  >&2 echo "The following files can be parsed without errors, but they are listed in $this_dir/known-parsing-failures.txt. Please remove them from $this_dir/known-parsing-failures.txt and try again:"
+  >&2 echo "Some files can be parsed without errors, but they are listed in $failures_file. Please remove those lines from $failures_file and try again:"
   >&2 printf -- "- %s\n" "${incorrect_failures[@]}"
   exit 1
 fi
 if [ ${#inexistent_failures[*]} -gt 0 ]; then
-  >&2 echo "The following files do not exist. Please remove them from $this_dir/known-parsing-failures.txt and try again:"
+  >&2 echo "The following files could not be found in $sources_dir. Please remove those lines from $failures_file and try again:"
   >&2 printf -- "- %s\n" "${inexistent_failures[@]}"
   exit 1
 fi
@@ -93,7 +95,7 @@ done < <(
     -not -path "$sources_dir/zig/test/cases/compile_errors/**"
 )
 if [ ${#parse_args[*]} -eq 0 ]; then
-  >&2 echo "No files found to test"
+  >&2 echo "No files found to parse"
   exit 1
 fi
 
