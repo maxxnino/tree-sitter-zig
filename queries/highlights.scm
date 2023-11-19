@@ -23,7 +23,7 @@ parameter: (IDENTIFIER) @parameter
     field_access: (IDENTIFIER)
     parameter: (IDENTIFIER)
   ] @type
-  (#match? @type "^[A-Z]([a-z]+[A-Za-z0-9]*)*$")
+  (#match? @type "^[A-Z][A-Za-z0-9]*$")
 )
 ;; assume camelCase is a function
 (
