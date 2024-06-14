@@ -2243,6 +2243,10 @@
             "value": "c_longdouble"
           },
           {
+            "type": "STRING",
+            "value": "c_char"
+          },
+          {
             "type": "PATTERN",
             "value": "(i|u)[0-9]+"
           }
