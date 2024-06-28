@@ -2164,6 +2164,10 @@
           },
           {
             "type": "STRING",
+            "value": "f64",
+          },
+          {
+            "type": "STRING",
             "value": "f128"
           },
           {
@@ -2205,6 +2209,10 @@
           {
             "type": "STRING",
             "value": "comptime_float"
+          },
+          {
+            "type": "STRING",
+            "value": "c_char",
           },
           {
             "type": "STRING",
