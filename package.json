@@ -3,22 +3,43 @@
   "version": "0.0.1",
   "description": "zig grammar for tree-sitter",
   "main": "bindings/node",
+  "types": "bindings/node",
   "keywords": [
     "parsing",
     "incremental"
   ],
+  "files": [
+    "grammar.js",
+    "binding.gyp",
+    "prebuilds/**",
+    "bindings/node/*",
+    "queries/*",
+    "src/**"
+  ],
   "dependencies": {
-    "nan": "^2.12.1"
+    "node-addon-api": "^7.1.0",
+    "node-gyp-build": "^4.8.0"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.21.0"
+  },
+  "peerDependenciesMeta": {
+    "tree_sitter": {
+      "optional": true
+    }
   },
   "devDependencies": {
-    "tree-sitter-cli": "0.20.7"
+    "tree-sitter-cli": "0.20.7",
+    "prebuildify": "^6.0.0"
   },
   "scripts": {
     "test": "tree-sitter test",
     "generate": "tree-sitter generate",
     "test-parsing": "scripts/test-parsing",
     "test-queries": "scripts/test-queries",
-    "parse": "tree-sitter parse"
+    "parse": "tree-sitter parse",
+    "install": "node-gyp-build",
+    "prebuildify": "prebuildify --napi --strip"
   },
   "tree-sitter": [
     {

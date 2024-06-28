@@ -2164,7 +2164,7 @@
           },
           {
             "type": "STRING",
-            "value": "f80",
+            "value": "f80"
           },
           {
             "type": "STRING",
@@ -2212,7 +2212,7 @@
           },
           {
             "type": "STRING",
-            "value": "c_char",
+            "value": "c_char"
           },
           {
             "type": "STRING",
@@ -5695,4 +5695,3 @@
   ],
   "supertypes": []
 }
-
