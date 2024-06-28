@@ -2164,7 +2164,7 @@
           },
           {
             "type": "STRING",
-            "value": "f64",
+            "value": "f80",
           },
           {
             "type": "STRING",
