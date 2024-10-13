@@ -1,3 +1,12 @@
+### ⚠️ Project Maintenance Update
+
+Hi everyone! 😊
+
+I wanted to let you know that I’m no longer actively using **Zig**, which means I don't have as much motivation to keep maintaining this project. That being said, I believe this project still has a lot of potential, and I would love to see it continue to grow! 
+
+If you're passionate about Zig and would like to help maintain and improve this project, feel free to reach out. Your contributions and support would be greatly appreciated! 🙌
+
+Thanks for your understanding and for being part of the community!
 <div align="center">
   <h1>Tree Sitter For Zig</h1>
 </div>
